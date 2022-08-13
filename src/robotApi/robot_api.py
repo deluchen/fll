@@ -10,6 +10,7 @@ v1.0 release
 v1.1 fixed minor issues
 v1.2 fixed proportional turning to be more accurate
 v1.3 fixed minor issues in line follow
+v1.31 made code more efficient
 '''
 
 
@@ -71,10 +72,10 @@ def on_black_line():
 #Tested, works, score 90/100, moves smoothly and acurately but can't keep up to sharp turns
 
 
-def line_follow(stop_condition, number, power, color):
+def line_follow(stop_condition, power, color):
     reset()
 
-    while stop_condition() < number:
+    while not stop_condition():
         kp = 0.55
         target_light = 66
         motor_power = power
@@ -91,11 +92,11 @@ def line_follow(stop_condition, number, power, color):
 #Tested, works, score 95/100, moves smoothly and acurately
 
 
-def proportional_movement(stop_conditions, number, power):
+def proportional_movement(stop_conditions, power):
     global number_of_lines_passed, left_last_line
     reset()
 
-    while True:
+    while not stop_conditions():
         motor_power = power
         correction = 0 - get_yaw()
         motor_pair.start_tank_at_power(int(motor_power + correction), int(motor_power - correction))
@@ -104,10 +105,6 @@ def proportional_movement(stop_conditions, number, power):
             left_last_line = False
         elif not on_black_line_left():
             left_last_line = True
-        if stop_conditions() >= number:
-            break
-        else:
-            pass
     motor_pair.stop()
 
 
@@ -175,8 +172,8 @@ reset()
 #List of functions
 
 '''
-line_follow(get value1, number, power, color)
-proportional_movement(get value2, number, power)
+line_follow(get value1,  power, color)
+proportional_movement(get value2,  power)
 proportional_turning(degrees)
 line_square(power)
 reset()
