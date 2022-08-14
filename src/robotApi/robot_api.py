@@ -4,16 +4,6 @@ from math import *
 from spike.operator import equal_to, not_equal_to
 
 
-#Change log
-'''
-v1.0 release
-v1.1 fixed minor issues
-v1.2 fixed proportional turning to be more accurate
-v1.3 fixed minor issues in line follow
-v1.31 made code more efficient
-'''
-
-
 #Port definitions
 
 
@@ -31,6 +21,7 @@ time = Timer()
 
 number_of_lines_passed = 0
 left_last_line = False
+timeout
 
 
 #Get value function definitions
@@ -63,10 +54,8 @@ def on_black_line_right():
 def on_black_line():
     return (color_left.get_reflected_light()) < 40 or (color_right.get_reflected_light()) < 40
 
-#Ignore line ends here
 
-
-#Defining functions start here
+#Function definitions start here
 
 
 #Tested, works, score 90/100, moves smoothly and acurately but can't keep up to sharp turns
@@ -87,6 +76,9 @@ def line_follow(stop_condition, power, color):
             correction = kp * (target_light - get_light_right())
         motor_pair.start_tank_at_power(int(motor_power + correction), int(motor_power - correction))
     motor_pair.stop()
+def countdown_timer():
+    global timeout
+    return get_time() > timeout
 
 
 #Tested, works, score 95/100, moves smoothly and acurately
@@ -163,7 +155,15 @@ def line_square(power):
     motor_pair.stop()
 
 
-#Reset everything
+#Beta-testing
+
+
+def set_timeout(seconds):
+    global timeout
+    timeout = seconds
+
+
+#Resets everything
 
 
 reset()
@@ -176,6 +176,7 @@ line_follow(get value1,  power, color)
 proportional_movement(get value2,  power)
 proportional_turning(degrees)
 line_square(power)
+set_timeout(seconds)
 reset()
 '''
 
@@ -192,7 +193,7 @@ get_light_right()
 on_black_line_left()
 on_black_line_right()
 on_black_line()
+countdown_timer()
 '''
 
 #Start coding here
-
